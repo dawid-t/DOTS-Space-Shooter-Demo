@@ -458,7 +458,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  projectileMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   shipMaterial: {fileID: 2100000, guid: e6ff7426da3613a46b9de705728ba760, type: 2}
+  projectileMaterial: {fileID: 2100000, guid: 6c6be5aa798a1074fb519834623ca33a, type: 2}
 --- !u!1 &2128878866
 GameObject:
   m_ObjectHideFlags: 0

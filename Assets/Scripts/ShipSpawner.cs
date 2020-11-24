@@ -6,14 +6,23 @@ using UnityEngine;
 
 public class ShipSpawner : MonoBehaviour
 {
+	private static ShipSpawner instance;
+
 	[SerializeField]
-	private Mesh shipMesh;
+	private Mesh shipMesh, projectileMesh;
 	[SerializeField]
-	private Material shipMaterial;
+	private Material shipMaterial, projectileMaterial;
+
+
+	public static ShipSpawner Instance => instance;
+
+	public Mesh ProjectileMesh => projectileMesh;
+	public Material ProjectileMaterial => projectileMaterial;
 
 
 	private void Start()
 	{
+		instance = this;
 		EntityManager manager = World.Active.EntityManager;
 		Entity shipEntity = CreateShipEntity(manager);
 		SetShipEntitySettings(shipEntity, manager);
@@ -24,10 +33,10 @@ public class ShipSpawner : MonoBehaviour
 		EntityArchetype shipEntityArchetype = manager.CreateArchetype(
 			typeof(Translation),
 			typeof(Scale),
+			typeof(Rotation),
 			typeof(RenderMesh),
 			typeof(LocalToWorld),
-			typeof(ShipData),
-			typeof(Rotation)
+			typeof(ShipData)
 		);
 
 		return manager.CreateEntity(shipEntityArchetype);
@@ -62,9 +71,8 @@ public class ShipSpawner : MonoBehaviour
 		ShipData shipData = new ShipData()
 		{
 			SpeedMultiplier = 0.75f,
-			Speed = 0,
-			Rotation = 0,
-			RotationMultiplier = 3
+			RotationMultiplier = 3,
+			AttackSpeed = 0.5f
 		};
 		manager.SetComponentData(shipEntity, shipData);
 	}

@@ -61,9 +61,26 @@ public class ShipSystem : ComponentSystem
 				lastProjectileSpawnedTime = Time.time;
 			}
 
-			// Destroy if collided with asteroid:
+			// Destroy if collided with asteroid (use more quadrant cells for better collision precision):
+			int hashMapKey = QuadrantSystem.GetQuadrantHashMapKey(translation.Value);
 			QuadrantSystem.QuadrantEntityData quadrantData;
-			if(AsteroidsSystem.IsCollisionWithAsteroid(entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData))
+
+			bool[] isCollision = new bool[9];
+			isCollision[0] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+
+			isCollision[1] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey+1, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+			isCollision[2] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey-1, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+
+			isCollision[3] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey+QuadrantSystem.QuadrantYMultiplier, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+			isCollision[4] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey-QuadrantSystem.QuadrantYMultiplier, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+
+			isCollision[5] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey+1+QuadrantSystem.QuadrantYMultiplier, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+			isCollision[6] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey-1+QuadrantSystem.QuadrantYMultiplier, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+
+			isCollision[7] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey+1-QuadrantSystem.QuadrantYMultiplier, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+			isCollision[8] = AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey-1-QuadrantSystem.QuadrantYMultiplier, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData);
+
+			if(isCollision[0] || isCollision[1] || isCollision[2] || isCollision[3] || isCollision[4] || isCollision[5] || isCollision[6] || isCollision[7] || isCollision[8])
 			{
 				if(entity != Entity.Null)
 				{

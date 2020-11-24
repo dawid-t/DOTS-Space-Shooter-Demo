@@ -12,7 +12,8 @@ public class QuadrantSystem : ComponentSystem
 	private const float quadrantCellSize = 0.5f;
 	private static NativeMultiHashMap<int, QuadrantEntityData> quadrantAsteroidsMultiHashMap;
 
-	
+
+	public static int QuadrantYMultiplier => quadrantYMultiplier;
 	public static NativeMultiHashMap<int, QuadrantEntityData> QuadrantAsteroidsMultiHashMap => quadrantAsteroidsMultiHashMap;
 
 

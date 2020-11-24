@@ -27,8 +27,9 @@ public class AsteroidsSystem : JobComponentSystem
 			translation.Value.y += vel.Velocity.y * deltaTime;
 
 			// Destroy if collided with other asteroid:
+			int hashMapKey = QuadrantSystem.GetQuadrantHashMapKey(translation.Value);
 			QuadrantSystem.QuadrantEntityData quadrantData;
-			if(IsCollisionWithAsteroid(entity, index, translation, quadrantMultiHashMap, out quadrantData))
+			if(IsCollisionWithAsteroid(hashMapKey, entity, index, translation, quadrantMultiHashMap, out quadrantData))
 			{
 				if(entity != Entity.Null)
 				{
@@ -66,9 +67,8 @@ public class AsteroidsSystem : JobComponentSystem
 		return jobHandle;
 	}
 
-	public static bool IsCollisionWithAsteroid(Entity entity, int index, Translation translation, NativeMultiHashMap<int, QuadrantSystem.QuadrantEntityData> quadrantMultiHashMap, out QuadrantSystem.QuadrantEntityData quadrantData)
+	public static bool IsCollisionWithAsteroid(int hashMapKey, Entity entity, int index, Translation translation, NativeMultiHashMap<int, QuadrantSystem.QuadrantEntityData> quadrantMultiHashMap, out QuadrantSystem.QuadrantEntityData quadrantData)
 	{
-		int hashMapKey = QuadrantSystem.GetQuadrantHashMapKey(translation.Value);
 		NativeMultiHashMapIterator<int> nativeMultiHashMapIterator;
 
 		if(quadrantMultiHashMap.TryGetFirstValue(hashMapKey, out quadrantData, out nativeMultiHashMapIterator))

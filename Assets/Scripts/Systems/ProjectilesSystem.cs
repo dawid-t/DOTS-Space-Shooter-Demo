@@ -22,8 +22,9 @@ public class ProjectilesSystem : ComponentSystem
 			}
 
 			// Destroy if collided with asteroid and update the score:
+			int hashMapKey = QuadrantSystem.GetQuadrantHashMapKey(translation.Value);
 			QuadrantSystem.QuadrantEntityData quadrantData;
-			if(AsteroidsSystem.IsCollisionWithAsteroid(entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData))
+			if(AsteroidsSystem.IsCollisionWithAsteroid(hashMapKey, entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData))
 			{
 				if(entity != Entity.Null)
 				{

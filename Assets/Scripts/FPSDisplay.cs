@@ -10,8 +10,11 @@ public class FPSDisplay : MonoBehaviour
 
 	private void Update()
 	{
-		deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
-		float fps = 1.0f / deltaTime;
-		text_FPS.text = "FPS: "+Mathf.Round(fps);
+		if(Time.timeScale == 1)
+		{
+			deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
+			float fps = 1.0f / deltaTime;
+			text_FPS.text = "FPS: "+Mathf.Round(fps);
+		}
 	}
 }

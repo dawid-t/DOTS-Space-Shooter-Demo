@@ -54,11 +54,11 @@ public class ShipSystem : ComponentSystem
 			mainCamera.transform.position = new Vector3(translation.Value.x, translation.Value.y, mainCamera.transform.position.z);
 
 			// Spawn projectile after every "shipData.AttackSpeed" time:
-			if(Time.timeSinceLevelLoad - lastProjectileSpawnedTime > shipData.AttackSpeed)
+			if(Time.time - lastProjectileSpawnedTime > shipData.AttackSpeed)
 			{
 				float3 projectileSpawnPosition = translation.Value + forwardVector * 0.25f;
 				SpawnProjectile(projectileSpawnPosition, rotation);
-				lastProjectileSpawnedTime = Time.timeSinceLevelLoad;
+				lastProjectileSpawnedTime = Time.time;
 			}
 
 			// Destroy if collided with asteroid:
@@ -69,21 +69,11 @@ public class ShipSystem : ComponentSystem
 				{
 					PostUpdateCommands.DestroyEntity(entity);
 				}
-				if(quadrantData.entity != Entity.Null)
-				{
-					PostUpdateCommands.DestroyEntity(quadrantData.entity);
-				}
 
 				// End game:
-
+				UI.ShowRestartScenePanel();
 			}
 		});
-	}
-
-	protected override void OnDestroy()
-	{
-		score = 0;
-		base.OnDestroy();
 	}
 
 	private void SpawnProjectile(float3 projectileSpawnPosition, Rotation shipRotation)

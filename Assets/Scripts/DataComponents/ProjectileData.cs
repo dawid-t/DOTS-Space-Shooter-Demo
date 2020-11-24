@@ -1,6 +1,4 @@
-﻿
-
-using Unity.Entities;
+﻿using Unity.Entities;
 
 public struct ProjectileData : IComponentData
 {

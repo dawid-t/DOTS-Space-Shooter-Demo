@@ -10,10 +10,10 @@ public class QuadrantSystem : ComponentSystem
 {
 	private const int quadrantYMultiplier = 10000;
 	private const float quadrantCellSize = 0.5f;
-	private static NativeMultiHashMap<int, QuadrantEntityData> quadrantMultiHashMap;
+	private static NativeMultiHashMap<int, QuadrantEntityData> quadrantAsteroidsMultiHashMap;
 
 	
-	public static NativeMultiHashMap<int, QuadrantEntityData> QuadrantMultiHashMap => quadrantMultiHashMap;
+	public static NativeMultiHashMap<int, QuadrantEntityData> QuadrantAsteroidsMultiHashMap => quadrantAsteroidsMultiHashMap;
 
 
 	public struct QuadrantEntityData
@@ -41,23 +41,23 @@ public class QuadrantSystem : ComponentSystem
 
 	protected override void OnCreate()
 	{
-		quadrantMultiHashMap = new NativeMultiHashMap<int, QuadrantEntityData>(0, Allocator.Persistent);
+		quadrantAsteroidsMultiHashMap = new NativeMultiHashMap<int, QuadrantEntityData>(0, Allocator.Persistent);
 		base.OnCreate();
 	}
 
 	protected override void OnUpdate()
 	{
-		EntityQuery entityQuery = GetEntityQuery(typeof(Translation));
+		EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(AsteroidVelocityData));
 
-		quadrantMultiHashMap.Clear();
-		if(entityQuery.CalculateEntityCount() > quadrantMultiHashMap.Capacity)
+		quadrantAsteroidsMultiHashMap.Clear();
+		if(entityQuery.CalculateEntityCount() > quadrantAsteroidsMultiHashMap.Capacity)
 		{
-			quadrantMultiHashMap.Capacity = entityQuery.CalculateEntityCount();
+			quadrantAsteroidsMultiHashMap.Capacity = entityQuery.CalculateEntityCount();
 		}
 
 		SetQuadrantDataHashMapJob setQuadrantDataHashMapJob = new SetQuadrantDataHashMapJob
 		{
-			quadrantMultiHashMap = quadrantMultiHashMap.ToConcurrent(),
+			quadrantMultiHashMap = quadrantAsteroidsMultiHashMap.ToConcurrent(),
 		};
 		JobHandle jobHandle = JobForEachExtensions.Schedule(setQuadrantDataHashMapJob, entityQuery);
 		jobHandle.Complete();
@@ -65,7 +65,7 @@ public class QuadrantSystem : ComponentSystem
 
 	protected override void OnDestroy()
 	{
-		quadrantMultiHashMap.Dispose();
+		quadrantAsteroidsMultiHashMap.Dispose();
 		base.OnDestroy();
 	}
 

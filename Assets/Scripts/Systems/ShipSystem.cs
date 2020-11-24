@@ -6,7 +6,12 @@ using UnityEngine;
 
 public class ShipSystem : ComponentSystem
 {
+	private static int score = 0;
+
 	private float lastProjectileSpawnedTime = 0;
+
+
+	public static int Score { get => score; set => score = value; }
 
 
 	protected override void OnUpdate()
@@ -55,7 +60,30 @@ public class ShipSystem : ComponentSystem
 				SpawnProjectile(projectileSpawnPosition, rotation);
 				lastProjectileSpawnedTime = Time.timeSinceLevelLoad;
 			}
+
+			// Destroy if collided with asteroid:
+			QuadrantSystem.QuadrantEntityData quadrantData;
+			if(AsteroidsSystem.IsCollisionWithAsteroid(entity, entity.Index, translation, QuadrantSystem.QuadrantAsteroidsMultiHashMap, out quadrantData))
+			{
+				if(entity != Entity.Null)
+				{
+					PostUpdateCommands.DestroyEntity(entity);
+				}
+				if(quadrantData.entity != Entity.Null)
+				{
+					PostUpdateCommands.DestroyEntity(quadrantData.entity);
+				}
+
+				// End game:
+
+			}
 		});
+	}
+
+	protected override void OnDestroy()
+	{
+		score = 0;
+		base.OnDestroy();
 	}
 
 	private void SpawnProjectile(float3 projectileSpawnPosition, Rotation shipRotation)

@@ -16,7 +16,8 @@ public class AsteroidsSystem : JobComponentSystem
 	{
 		public float deltaTime;
 		public EntityCommandBuffer.Concurrent entityCommandBuffer;
-		[ReadOnly] public NativeMultiHashMap<int, QuadrantSystem.QuadrantEntityData> quadrantMultiHashMap;
+		[ReadOnly]
+		public NativeMultiHashMap<int, QuadrantSystem.QuadrantEntityData> quadrantMultiHashMap;
 
 
 		public void Execute(Entity entity, int index, ref Translation translation, ref AsteroidVelocityData vel)
@@ -25,27 +26,18 @@ public class AsteroidsSystem : JobComponentSystem
 			translation.Value.x += vel.Velocity.x * deltaTime;
 			translation.Value.y += vel.Velocity.y * deltaTime;
 
-			// Destroy if collided with something (with other asteroid, projectile or player):
-			int hashMapKey = QuadrantSystem.GetQuadrantHashMapKey(translation.Value);
+			// Destroy if collided with other asteroid:
 			QuadrantSystem.QuadrantEntityData quadrantData;
-			NativeMultiHashMapIterator<int> nativeMultiHashMapIterator;
-			if(quadrantMultiHashMap.TryGetFirstValue(hashMapKey, out quadrantData, out nativeMultiHashMapIterator))
+			if(IsCollisionWithAsteroid(entity, index, translation, quadrantMultiHashMap, out quadrantData))
 			{
-				do
+				if(entity != Entity.Null)
 				{
-					if(!entity.Equals(quadrantData.entity) && math.distance(translation.Value, quadrantData.position) < 0.25f)
-					{
-						if(entity != Entity.Null)
-						{
-							entityCommandBuffer.DestroyEntity(index, entity);
-						}
-						if(quadrantData.entity != Entity.Null)
-						{
-							entityCommandBuffer.DestroyEntity(quadrantData.entity.Index, quadrantData.entity);
-						}
-						break;
-					}
-				} while(quadrantMultiHashMap.TryGetNextValue(out quadrantData, ref nativeMultiHashMapIterator));
+					entityCommandBuffer.DestroyEntity(index, entity);
+				}
+				if(quadrantData.entity != Entity.Null)
+				{
+					entityCommandBuffer.DestroyEntity(quadrantData.entity.Index, quadrantData.entity);
+				}
 			}
 		}
 	}
@@ -63,14 +55,32 @@ public class AsteroidsSystem : JobComponentSystem
 		{
 			deltaTime = Time.deltaTime,
 			entityCommandBuffer = endSimulationEntityCommandBufferSystem.CreateCommandBuffer().ToConcurrent(),
-			quadrantMultiHashMap = QuadrantSystem.QuadrantMultiHashMap
+			quadrantMultiHashMap = QuadrantSystem.QuadrantAsteroidsMultiHashMap
 		};
 		JobHandle jobHandle = asteroidsJob.Schedule(this, inputDeps);
 		endSimulationEntityCommandBufferSystem.AddJobHandleForProducer(jobHandle);
 
-		EntityQuery entityQuery = GetEntityQuery(typeof(AsteroidVelocityData));
-		AsteroidsSpawner.AsteroidsToSpawn = AsteroidsSpawner.MaxAsteroidsNumber - entityQuery.CalculateEntityCount();
+		EntityQuery asteroidsEntityQuery = GetEntityQuery(typeof(AsteroidVelocityData));
+		AsteroidsSpawner.AsteroidsToSpawn = AsteroidsSpawner.MaxAsteroidsNumber - asteroidsEntityQuery.CalculateEntityCount();
 
 		return jobHandle;
+	}
+
+	public static bool IsCollisionWithAsteroid(Entity entity, int index, Translation translation, NativeMultiHashMap<int, QuadrantSystem.QuadrantEntityData> quadrantMultiHashMap, out QuadrantSystem.QuadrantEntityData quadrantData)
+	{
+		int hashMapKey = QuadrantSystem.GetQuadrantHashMapKey(translation.Value);
+		NativeMultiHashMapIterator<int> nativeMultiHashMapIterator;
+
+		if(quadrantMultiHashMap.TryGetFirstValue(hashMapKey, out quadrantData, out nativeMultiHashMapIterator))
+		{
+			do
+			{
+				if(!entity.Equals(quadrantData.entity) && math.distance(translation.Value, quadrantData.position) < 0.25f)
+				{
+					return true;
+				}
+			} while(quadrantMultiHashMap.TryGetNextValue(out quadrantData, ref nativeMultiHashMapIterator));
+		}
+		return false;
 	}
 }

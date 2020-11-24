@@ -404,9 +404,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2004347339}
+  - component: {fileID: 2004347340}
   - component: {fileID: 2004347338}
   m_Layer: 0
-  m_Name: AsteroidsSpawner
+  m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,8 +427,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   asteroidsNumberOnX: 160
   asteroidsNumberOnY: 160
-  asteroidsVelocitySeed: 100
-  asteroidsMaxSpeed: 1
+  asteroidsVelocitySeed: 101
+  asteroidsMaxSpeed: 0.5
   asteroidMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   asteroidMaterial: {fileID: 2100000, guid: e7d7d253f9de26c4e94269227630dda0, type: 2}
 --- !u!4 &2004347339
@@ -444,6 +445,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2004347340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004347337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db79d51c50fc71c43add7e2202219862, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shipMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  shipMaterial: {fileID: 2100000, guid: e6ff7426da3613a46b9de705728ba760, type: 2}
 --- !u!1 &2128878866
 GameObject:
   m_ObjectHideFlags: 0

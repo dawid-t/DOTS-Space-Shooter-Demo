@@ -19,21 +19,21 @@ public class AsteroidsSystem : JobComponentSystem
 		[ReadOnly] public NativeMultiHashMap<int, QuadrantSystem.QuadrantEntityData> quadrantMultiHashMap;
 
 
-		public void Execute(Entity entity, int index, ref Translation t, ref AsteroidVelocityData vel)
+		public void Execute(Entity entity, int index, ref Translation translation, ref AsteroidVelocityData vel)
 		{
 			// Update position:
-			t.Value.x += vel.Velocity.x * deltaTime;
-			t.Value.y += vel.Velocity.y * deltaTime;
+			translation.Value.x += vel.Velocity.x * deltaTime;
+			translation.Value.y += vel.Velocity.y * deltaTime;
 
 			// Destroy if collided with something (with other asteroid, projectile or player):
-			int hashMapKey = QuadrantSystem.GetQuadrantHashMapKey(t.Value);
+			int hashMapKey = QuadrantSystem.GetQuadrantHashMapKey(translation.Value);
 			QuadrantSystem.QuadrantEntityData quadrantData;
 			NativeMultiHashMapIterator<int> nativeMultiHashMapIterator;
 			if(quadrantMultiHashMap.TryGetFirstValue(hashMapKey, out quadrantData, out nativeMultiHashMapIterator))
 			{
 				do
 				{
-					if(!entity.Equals(quadrantData.entity) && math.distance(t.Value, quadrantData.position) < 0.25f)
+					if(!entity.Equals(quadrantData.entity) && math.distance(translation.Value, quadrantData.position) < 0.25f)
 					{
 						if(entity != Entity.Null)
 						{

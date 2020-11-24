@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using System.Collections;
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -40,15 +41,19 @@ public class UI : MonoBehaviour
 
 	public void OnClickRestartButton()
 	{
-		// Play end scene animation:
-		// todo.
-
 		// Reset objects:
 		EntityManager manager = World.Active.EntityManager;
 		manager.DestroyEntity(manager.UniversalQuery);
 		ShipSystem.Score = 0;
 
-		// Restart level:
+		// Restart level and play end scene animation:
+		ChangeSceneEffect.Instance.EndSceneEffect();
+		StartCoroutine(DelayedResetScene());
+	}
+
+	private IEnumerator DelayedResetScene()
+	{
+		yield return new WaitForSecondsRealtime(1.5f);
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 }

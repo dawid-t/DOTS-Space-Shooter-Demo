@@ -56,4 +56,24 @@ public class UI : MonoBehaviour
 		yield return new WaitForSecondsRealtime(1.5f);
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
+
+	public void OnClickZoomCamera(bool zoomIn)
+	{
+		Camera mainCamera = Camera.main;
+
+		if(zoomIn)
+		{
+			if(mainCamera.orthographicSize > 2)
+			{
+				mainCamera.orthographicSize -= mainCamera.orthographicSize/2;
+			}
+		}
+		else
+		{
+			if(mainCamera.orthographicSize < 600)
+			{
+				mainCamera.orthographicSize += mainCamera.orthographicSize;
+			}
+		}
+	}
 }

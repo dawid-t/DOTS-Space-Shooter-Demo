@@ -1,5 +1,9 @@
 # DOTS Space Shooter Demo
 
-A small game created with Unity DOTS. In game we have 25600 dynamic asteroids colliding with each other. Goal was to achive 60FPS+ on the PC.
+A small game created with Unity DOTS. In game we have 25600 dynamic asteroids colliding with each other. The goal was to achieve 60FPS+ on PC.
 
-Video presenting the game: https://youtu.be/UMRkW3TmTzI
+Video presenting the game on PC and Android devices: https://youtu.be/UMRkW3TmTzI
+
+<p align="center">
+  <img src="showcase.gif">
+</p>
